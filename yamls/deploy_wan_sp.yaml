@@ -1,0 +1,43 @@
+---
+slice:
+   id: slice1
+   name: TouristicCDN_sliced
+   db-parameters:
+     db: influxdb:2.0
+     user: tenantA
+     db-ip: x.x.x.x
+     password: pwdtenantA
+     org-name: tenantA-slice
+     bucket-name: slice1
+     token: secrettoken
+   slice-parts: # List of slice-parts in this slice
+      - slice-part:
+        name: wan-sp-1 # The slice-part name
+        type: WAN # The slice-part type, can be: [Datacenter, WAN]
+        sp-id: wan-sp-1 # The slice-part ID
+        management-parameters:
+           wim: openflow
+           ip: x.x.x.x
+           port: 8080
+           user: debeltrami
+           password: -----
+           ssh-port: 22
+        monitoring-parameters:
+           tool: openflow_mon
+           tool-ip: x.x.x.x
+           tool-port: 8080
+           mon-port-enabled: true
+           granularity-secs: 1
+           metrics:
+               - PACKETS_RX
+               - PACKETS_TX
+               - BYTES_RX
+               - BYTES_TX
+               - DROPS_TX
+               - DROPS_RX
+               - ERRORS_RX
+               - ERRORS_TX
+               - FRAME_ERRORS_RX
+               - OVERRUN_ERRORS_RX
+               - CRC_ERRORS_RX
+               - COLLISIONS

@@ -1,0 +1,51 @@
+slices:
+  slice: # List of slices to be configured
+    database-credentials:
+      type: influxdb
+      url: http://ip:port
+      token: secrettoken
+      org-name: tenantA-slice
+      bucket-name: slice1
+      elasticity-url: http://ip:port/elasticity
+    slice-id: slice1 # The slice ID
+    name: TouristicCDN_sliced # The slice name
+    slice-parts: # List of slice-parts in this slice
+      - slice-part:
+        name: wan-sp-1
+        type: WAN
+        sp-id: wan-sp-1
+        nodes:
+        - node:
+          name: wan-sp-1
+          node-id: wan-sp-1
+          VIM: None
+          WIM: openflow
+        policies-elasticity:
+        - policy:
+          name: policy1
+          elasticity-type: scale-up-queue
+          algorithm:
+            type: threshold
+            algorithm-parameters:
+              triggers:
+              - trigger:
+                metric-name: BYTES_RX
+                metric-type: network
+                push-interval: default
+                function: derivative
+                threshold: 1800000
+                unit: bits/s
+                operator: ">="
+                statistic:
+                  stats-type: window
+                  threshold-window: 3
+                  threshold-seconds: 5s
+          elasticity-action:
+              elasticity-type: scale-up-queue
+              description: What's suppose to happen when this elasticity type is triggered
+              commands:
+               - "touch teste2.txt"
+               - "sudo ovs-vsctl -- set port s1-eth3 qos=@newqos -- --id=@newqos create qos type=linux-htb other-config:max-rate=20000000 queues:1=@q1 -- --id=@q1 create queue other-config:min-rate=5000000 other-config:max-rate=5000000 >> q3.txt"
+               - "sudo ovs-vsctl -- set port s3-eth3 qos=@newqos -- --id=@newqos create qos type=linux-htb other-config:max-rate=20000000 queues:2=@q2 -- --id=@q2 create queue other-config:min-rate=5000000 other-config:max-rate=5000000 >> q4.txt"
+               - "sudo ovs-ofctl add-flow s1 in_port=1,priority=102,dl_type=0x0800,nw_src=10.0.0.2,actions=set_queue:1,normal >> flow3.txt"
+               - "sudo ovs-ofctl add-flow s3 in_port=1,priority=102,dl_type=0x0800,nw_src=10.0.0.3,actions=set_queue:2,normal >> flow4.txt"

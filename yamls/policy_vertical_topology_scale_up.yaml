@@ -1,0 +1,67 @@
+slices:
+  slice: # List of slices to be configured
+    slice-id: slice1 # The slice ID
+    name: TouristicCDN_sliced # The slice name
+    slice-parts: # List of slice-parts in this slice
+      - slice-part:
+        name: wan-sp-1
+        type: WAN
+        sp-id: wan-sp-1
+        nodes:
+        - node:
+          name: wan-sp-1
+          node-id: wan-sp-1
+          VIM: None
+          WIM: openflow
+        policies-elasticity:
+        - policy:
+          name: policy1
+          elasticity-type: scale-up-link
+          algorithm:
+            type: threshold
+            algorithm-parameters:
+              triggers:
+              - trigger:
+                metric-name: BYTES_RX
+                metric-type: network
+                push-interval: default
+                function: derivative
+                threshold: 1800000
+                unit: Mbit/s
+                operator: ">="
+                statistic:
+                  stats-type: window
+                  threshold-window: 3
+                  threshold-seconds: 5s
+          elasticity-action:
+              elasticity-type: scale-up-link
+              description: What's suppose to happen when this elasticity type is triggered
+              commands:
+               - "touch teste2.txt"
+               - "sudo ovs-vsctl add-br s4"
+               - "sudo ovs-vsctl set bridge s4 other_config:datapath-id=0000000000000004"
+               - "sudo ovs-vsctl set bridge s4 datapath-id=0000000000000004"
+               - "sudo ovs-vsctl set-controller s4 tcp:127.0.0.1:6653"
+               - "sudo ip link add name s1-eth4 type veth peer name s4-eth1 netns 1"
+               - "sudo ip link add name s3-eth4 type veth peer name s4-eth2 netns 1"
+               - "sudo ip link set s3-eth4 up"
+               - "sudo ip link set s1-eth4 up"
+               - "sudo ip link set s4-eth1 up"
+               - "sudo ip link set s4-eth2 up"
+               - "sudo ovs-vsctl add-port s4 s4-eth1 -- set Interface s4-eth1 ofport_request=1"
+               - "sudo ovs-vsctl add-port s4 s4-eth2 -- set Interface s4-eth2 ofport_request=2"
+               - "sudo ovs-vsctl add-port s3 s3-eth4 -- set Interface s3-eth4 ofport_request=4"
+               - "sudo ovs-vsctl add-port s1 s1-eth4 -- set Interface s1-eth4 ofport_request=4"
+               - "sudo ovs-ofctl add-flow s1 in_port=1,priority=100,actions=output:4"
+               - "sudo ovs-ofctl add-flow s1 in_port=4,priority=100,actions=output:1"
+               - "sudo ovs-ofctl add-flow s3 in_port=4,priority=100,actions=output:1"
+               - "sudo ovs-ofctl add-flow s3 in_port=1,priority=100,actions=output:4"
+               - "sudo ovs-ofctl add-flow s4 in_port=1,priority=100,actions=output:2"
+               - "sudo ovs-ofctl add-flow s4 in_port=2,priority=100,actions=output:1"
+    database-credentials:
+      type: influxdb
+      url: http://ip:port
+      token: secrettoken
+      org-name: tenantA-slice
+      bucket-name: slice1
+      elasticity-url: http://ip:port/elasticity

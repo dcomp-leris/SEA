@@ -1,0 +1,23 @@
+---
+slice:
+   id: slice1
+   name: touristic-slice
+   slice-parts:
+     - slice-part:
+       name: dc-sp-1 # The slice-part name
+       type: DC
+       sp-id: DSP1 # The slice-part ID
+       # The list of hosts to be added per slice part
+       hosts:
+         - host:
+           name: host-16gb # Name of the host
+           host-id: host-2345 # Host identifier
+           type: Virtual Machine # Host type [Physical, Virtual, Container]
+           os: Ubuntu 18.04 # Operational system to be installed
+           memory: 16 GB # RAM Memory to be allocated
+           CPUs: 2 # Number of vCPUs or CPUs
+           disk: 500 GB # Hard disk space
+           username: admin # Username of the OS
+           password: **** # Password of the OS
+           ssh: enabled # Enables ssh or not
+           ssh-port: 22 # SSH Port

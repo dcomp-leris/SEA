@@ -1,0 +1,20 @@
+---
+slice:
+   id: slice1
+   name: touristic-slice
+   slice-parts:
+     - slice-part:
+       name: wan-sp-1 # The slice-part name
+       type: WAN
+       sp-id: WSP1 # The slice-part ID
+       re-route-flows:
+         - flow:
+           src-ip: 10.0.0.3 # Source IP of the flow
+           dst-ip: 10.0.0.5 # Destination IP of the flow
+           src-port: 1111 # Source port of the flow
+           dst-port: 2222 # Destination port of the flow
+           protocol: TCP # Protocol
+           paths: # New route of the flow
+             - s1 to s2 # Switch 1 to Switch 2
+             - s2 to s4 # Switch 2 to Switch 4
+             - s4 to s5 # Switch 4 to Switch 5

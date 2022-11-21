@@ -1,0 +1,16 @@
+---
+slice:
+   id: slice1
+   name: touristic-slice
+   slice-parts:
+     - slice-part:
+       name: dc-sp-1
+       type: Datacenter
+       sp-id: DSP1
+       # Kubernetes specific parameters
+       deploy_type: "Deployment"
+       deploy_name: "nginx-deploy"
+       app_name: "my-nginx"
+       container_name: "nginx"
+       deploy_image: "nginx:latest"
+       replicas: 2

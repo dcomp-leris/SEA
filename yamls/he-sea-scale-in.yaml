@@ -1,0 +1,10 @@
+---
+slice:
+   id: slice1
+   name: touristic-slice
+   # List of slice-parts that are removed after HE scale in
+   slice-parts:
+     - slice-part:
+       name: dc-sp-1
+       type: Datacenter
+       sp-id: DSP1

@@ -1,0 +1,69 @@
+---
+slice:
+   id: slice1
+   name: touristic-slice
+   # List of slice-parts that are removed after HE scale in
+   slice-parts:
+      - slice-part:
+        name: wan-sp-2 # The slice-part name
+         # The slice-part type, can be: [Datacenter, WAN]
+        type: WAN
+        sp-id: WSP2 # The slice-part ID
+        management-parameters:
+           wim: ryucontroller # WIM used in the WSP 1
+           ip: x.x.x.x # Ryu Controller IP
+           port: 8080 # Ryu Controller REST API port
+           # Port to be used for SSH when needed
+           ssh-port: 22
+           # Basic credentials to access the WIM
+           user: admin
+           password: ****
+        monitoring-parameters:
+           # ME used to monitor the slice part WSP 1
+           tool: openflowv1.2
+           tool-ip: x.x.x.x # The ME IP address
+           # The port used to communicating with this ME
+           tool-port: 8080
+           # Basic credentials to access the ME
+           user: admin
+           password: ****
+           # Specific for this ME, enables or not the port monitoring
+           mon-port-enabled: true
+           # Time interval to collecting the metrics
+           granularity-secs: 1
+           # List of metrics to be monitored in this SP
+           metrics:
+              - PACKETS_RX
+              - PACKETS_TX
+              - BYTES_RX
+              - BYTES_TX
+              - DROPS_TX
+      - slice-part:
+           name: dc-sp-2 # The slice-part name
+           type: Datacenter # The slice-part type, can be: [Datacenter, WAN]
+           sp-id: DSP2 # The slice-part ID
+           management-parameters:
+              vim: kubernetes # The VIM used in this SP
+              ip: y.y.y.y # The IP where the VIM is running
+              port: 6443 # The port used to communicating with this VIM
+              # Basic credentials
+              user: admin
+              password: adminpwd
+           monitoring-parameters:
+              tool: prometheus # The ME used in this SP
+              tool-ip: y.y.y.y # The IP where the ME is running on this SP
+              tool-port: 19999 # The port used to communicating with this ME
+              # Basic credentials to access the ME
+              user: admin
+              password: ****
+              granularity-secs: 1 # Time interval to collecting the metrics
+              metrics: # List of metrics to be monitored in this SP
+                 - MEMORY_UTILIZATION_PHYSICAL
+                 - CPU_UTILIZATION_PHYSICAL
+                 - RATE_BYTES_READ_PHYSICAL
+                 - RATE_BYTES_WRITTEN_PHYSICAL
+                 - RATE_BYTES_RX_PHYSICAL
+                 - RATE_BYTES_TX_PHYSICAL
+                 - RATE_PACKETS_TX_PHYSICAL
+                 - RATE_PACKETS_RX_DROP_PHYSICAL
+                 - RATE_PACKETS_TX_DROP_PHYSICAL

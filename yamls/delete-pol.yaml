@@ -1,0 +1,8 @@
+---
+slice:
+   id: slice1
+   name: touristic-slice
+   policies-id:
+      - policy1
+      - policy2
+      - policy3
